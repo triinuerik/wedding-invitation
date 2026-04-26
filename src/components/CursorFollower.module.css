@@ -1,0 +1,9 @@
+.cursorFollower {
+  position: fixed;
+  width: 48px;
+  height: auto;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: none;
+}

@@ -1,0 +1,16 @@
+.main {
+  background: var(--cream);
+  padding: 4rem 1.5rem;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.footNote {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 2rem;
+}
