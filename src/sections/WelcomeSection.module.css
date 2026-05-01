@@ -1,26 +1,105 @@
 .welcome {
-  text-align: center;
-  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100vw;
+  max-width: none;
+  margin: 0 calc(50% - 50vw) 4rem;
 }
 
-.welcome p {
-  font-size: 1.1rem;
-  color: var(--charcoal);
-  margin-bottom: 1rem;
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 0;
+  min-height: 100vh;
 }
 
-.names {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  font-weight: 600;
-  color: var(--sage);
-  margin: 1.5rem 0;
+.infoPanel {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.imagePane {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.photo {
+  width: min(100%, 360px);
+  aspect-ratio: 3 / 4;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  max-width: none;
+  padding: clamp(2rem, 5vw, 5rem);
+}
+
+.content p {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(0.92rem, 1.8vw, 1.05rem);
+  color: rgba(250, 248, 245, 0.88);
   letter-spacing: 0.02em;
+  line-height: 1.65;
+  margin-bottom: 1.35rem;
 }
 
-.divider {
-  width: 60px;
-  height: 1px;
-  background: var(--gold);
-  margin: 1.5rem auto;
+.content p:last-child {
+  margin-bottom: 0;
+}
+
+.impact {
+  font-weight: 700;
+  color: var(--cream);
+}
+
+.content .names {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--cream);
+}
+
+.content .heading {
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 0.35rem;
+}
+
+@media (max-width: 760px) {
+  .welcome {
+    width: auto;
+    margin: 0 0 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .panel,
+  .infoPanel {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 1.6rem;
+  }
+
+  .imagePane {
+    padding: 0;
+    justify-content: flex-start;
+  }
+
+  .photo {
+    max-width: 300px;
+  }
+
+  .content {
+    max-width: none;
+    padding: 0;
+  }
 }

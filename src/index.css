@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap');
 
+@font-face {
+  font-family: 'The Seasons';
+  src: url('./assets/fonts/The Seasons.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -8,16 +16,18 @@
 
 :root {
   --cream: #faf8f5;
-  --sage: #8b9a7d;
+  --green: #20391c;
   --charcoal: #2c2c2c;
   --gold: #b8860b;
   --white: #ffffff;
+  --background: var(--green);
+  --font-display: 'The Seasons', 'Cormorant Garamond', serif;
 }
 
 body {
   font-family: 'Jost', sans-serif;
   font-weight: 300;
-  color: var(--charcoal);
+  color: var(--cream);
   line-height: 1.6;
   min-height: 100vh;
 }
