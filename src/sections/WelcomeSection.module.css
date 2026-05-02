@@ -1,17 +1,17 @@
 .welcome {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  width: 100vw;
-  max-width: none;
-  margin: 0 calc(50% - 50vw) 4rem;
+  gap: clamp(2rem, 6vw, 4rem);
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 4rem;
 }
 
 .panel {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   gap: 0;
-  min-height: 100vh;
+  align-items: center;
 }
 
 .infoPanel {
@@ -36,7 +36,6 @@
 .content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   text-align: left;
   max-width: none;
   padding: clamp(2rem, 5vw, 5rem);
@@ -79,13 +78,11 @@
   .welcome {
     width: auto;
     margin: 0 0 3rem;
-    margin-bottom: 3rem;
   }
 
   .panel,
   .infoPanel {
     grid-template-columns: 1fr;
-    min-height: auto;
     gap: 1.6rem;
   }
 

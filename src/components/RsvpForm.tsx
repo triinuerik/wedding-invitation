@@ -2,22 +2,39 @@ import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import styles from './RsvpForm.module.css'
 
-type FormValues = {
+type AdditionalGuest = {
+  id: string
   name: string
   email: string
+}
+
+type FormValues = {
+  mainGuestName: string
+  mainGuestEmail: string
   attending: 'yes' | 'no' | ''
-  guests: string
+  additionalGuests: AdditionalGuest[]
   dietary: string
   message: string
 }
 
-type FormErrors = Partial<Record<keyof FormValues, string>>
+type FormErrors = {
+  mainGuestName?: string
+  mainGuestEmail?: string
+  attending?: string
+  additionalGuests?: Record<string, string>
+}
 
-const initialValues: FormValues = {
+const createAdditionalGuest = (): AdditionalGuest => ({
+  id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
   name: '',
   email: '',
+})
+
+const initialValues: FormValues = {
+  mainGuestName: '',
+  mainGuestEmail: '',
   attending: '',
-  guests: '2',
+  additionalGuests: [],
   dietary: '',
   message: '',
 }
@@ -37,14 +54,32 @@ export function RsvpForm() {
 
   const validate = (candidate: FormValues): FormErrors => {
     const nextErrors: FormErrors = {}
-    if (!candidate.name.trim()) nextErrors.name = 'Full name is required.'
-    if (!candidate.email.trim()) {
-      nextErrors.email = 'Email is required.'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate.email)) {
-      nextErrors.email = 'Please enter a valid email address.'
+    if (!candidate.mainGuestName.trim()) {
+      nextErrors.mainGuestName = 'Main guest name is required.'
+    }
+    if (!candidate.mainGuestEmail.trim()) {
+      nextErrors.mainGuestEmail = 'Email is required for the main guest.'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate.mainGuestEmail)) {
+      nextErrors.mainGuestEmail = 'Please enter a valid email address.'
     }
     if (!candidate.attending) {
       nextErrors.attending = 'Please choose whether you will attend.'
+    }
+    const additionalGuestErrors = candidate.additionalGuests.reduce<
+      Record<string, string>
+    >((acc, guest) => {
+      if (!guest.name.trim()) {
+        acc[guest.id] = 'Guest name is required.'
+      } else if (
+        guest.email.trim() &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.email)
+      ) {
+        acc[guest.id] = 'Please enter a valid guest email address.'
+      }
+      return acc
+    }, {})
+    if (Object.keys(additionalGuestErrors).length > 0) {
+      nextErrors.additionalGuests = additionalGuestErrors
     }
     return nextErrors
   }
@@ -63,43 +98,149 @@ export function RsvpForm() {
     setValues(initialValues)
   }
 
+  const addGuest = () => {
+    setValues((prev) => ({
+      ...prev,
+      additionalGuests: [...prev.additionalGuests, createAdditionalGuest()],
+    }))
+  }
+
+  const updateGuest = (
+    id: string,
+    key: keyof Pick<AdditionalGuest, 'name' | 'email'>,
+    value: string
+  ) => {
+    setValues((prev) => ({
+      ...prev,
+      additionalGuests: prev.additionalGuests.map((guest) =>
+        guest.id === id ? { ...guest, [key]: value } : guest
+      ),
+    }))
+  }
+
+  const removeGuest = (id: string) => {
+    setValues((prev) => ({
+      ...prev,
+      additionalGuests: prev.additionalGuests.filter((guest) => guest.id !== id),
+    }))
+    setErrors((prev) => {
+      if (!prev.additionalGuests || !prev.additionalGuests[id]) {
+        return prev
+      }
+      const nextAdditionalGuestErrors = { ...prev.additionalGuests }
+      delete nextAdditionalGuestErrors[id]
+      return {
+        ...prev,
+        additionalGuests:
+          Object.keys(nextAdditionalGuestErrors).length > 0
+            ? nextAdditionalGuestErrors
+            : undefined,
+      }
+    })
+  }
+
   return (
     <form onSubmit={onSubmit} noValidate>
       <div className={styles.formRow}>
         <div className={styles.formGroup}>
-          <label htmlFor="name">Full name *</label>
+          <label htmlFor="mainGuestName">Full name *</label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={values.name}
+            id="mainGuestName"
+            name="mainGuestName"
+            value={values.mainGuestName}
             onChange={(event) =>
-              setValues((prev) => ({ ...prev, name: event.target.value }))
+              setValues((prev) => ({
+                ...prev,
+                mainGuestName: event.target.value,
+              }))
             }
             required
             placeholder="Your full name"
           />
-          {errors.name && <p className={styles.errorText}>{errors.name}</p>}
+          {errors.mainGuestName && (
+            <p className={styles.errorText}>{errors.mainGuestName}</p>
+          )}
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="email">Email *</label>
+          <label htmlFor="mainGuestEmail">Email *</label>
           <input
             type="email"
-            id="email"
-            name="email"
-            value={values.email}
+            id="mainGuestEmail"
+            name="mainGuestEmail"
+            value={values.mainGuestEmail}
             onChange={(event) =>
-              setValues((prev) => ({ ...prev, email: event.target.value }))
+              setValues((prev) => ({
+                ...prev,
+                mainGuestEmail: event.target.value,
+              }))
             }
             required
             placeholder="your@email.com"
           />
-          {errors.email && <p className={styles.errorText}>{errors.email}</p>}
+          {errors.mainGuestEmail && (
+            <p className={styles.errorText}>{errors.mainGuestEmail}</p>
+          )}
         </div>
       </div>
 
-      <button type="button" className={styles.btnText}>
-        I am additionally RSVPing on behalf of someone else
+      <div className={styles.formGroup}>
+        {values.additionalGuests.map((guest, index) => (
+          <div className={styles.guestRow} key={guest.id}>
+            <div className={styles.guestRowMain}>
+              <div className={styles.guestField}>
+                <label htmlFor={`guest-${guest.id}`}>+{index + 1} full name *</label>
+                <input
+                  type="text"
+                  id={`guest-${guest.id}`}
+                  name={`guest-${guest.id}`}
+                  value={guest.name}
+                  onChange={(event) =>
+                    updateGuest(guest.id, 'name', event.target.value)
+                  }
+                  required
+                  placeholder="Full name"
+                />
+              </div>
+              <div className={styles.guestField}>
+                <label htmlFor={`guest-email-${guest.id}`}>
+                  +{index + 1} email
+                </label>
+                <input
+                  type="email"
+                  id={`guest-email-${guest.id}`}
+                  name={`guest-email-${guest.id}`}
+                  className={styles.guestEmailInput}
+                  value={guest.email}
+                  onChange={(event) =>
+                    updateGuest(guest.id, 'email', event.target.value)
+                  }
+                  placeholder="Email (optional)"
+                />
+              </div>
+              <div className={styles.guestField}>
+                <label> </label>
+              <button
+                type="button"
+                className={styles.removeGuestButton}
+                onClick={() => removeGuest(guest.id)}
+              >
+                Remove
+              </button>
+              </div>
+
+            </div>
+            {errors.additionalGuests?.[guest.id] && (
+              <p className={styles.errorText}>
+                {errors.additionalGuests[guest.id]}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <button type="button" className={styles.btnText} onClick={addGuest}>
+        Add another guest
       </button>
 
       <div className={styles.formGroup}>
@@ -140,25 +281,6 @@ export function RsvpForm() {
         {errors.attending && (
           <p className={styles.errorText}>{errors.attending}</p>
         )}
-      </div>
-
-      <div className={styles.formGroup}>
-        <label htmlFor="guests">Number of guests</label>
-        <select
-          id="guests"
-          name="guests"
-          value={values.guests}
-          onChange={(event) =>
-            setValues((prev) => ({ ...prev, guests: event.target.value }))
-          }
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6+</option>
-        </select>
       </div>
 
       <div className={styles.formGroup}>

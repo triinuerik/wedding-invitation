@@ -5,8 +5,8 @@
 .formGroup label {
   display: block;
   font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--charcoal);
+  font-weight: 400;
+  color: var(--cream);
   margin-bottom: 0.35rem;
 }
 
@@ -15,11 +15,11 @@
 .formGroup textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  font-family: 'Jost', sans-serif;
   font-size: 1rem;
-  border: 1px solid #e0ddd8;
+  border: 1px solid var(--sage);
+  color: var(--cream);
   border-radius: 6px;
-  background: var(--cream);
+  background: transparent;
   transition: border-color 0.2s;
 }
 
@@ -27,12 +27,29 @@
 .formGroup select:focus,
 .formGroup textarea:focus {
   outline: none;
-  border-color: var(--sage);
+  border-color: var(--cream);
 }
 
 .formGroup textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: var(--sage);
+  opacity: 1;
+}
+
+.formGroup select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23faf8f5' d='M1.41 0.59L6 5.17 10.59 0.59 12 2l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 0.7rem;
 }
 
 .formRow {
@@ -56,20 +73,40 @@
 .radioGroup label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.32rem;
   font-weight: 400;
   cursor: pointer;
 }
 
-.radioGroup input {
-  width: auto;
+.radioGroup input[type='radio'] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1px solid var(--sage);
+  border-radius: 50%;
+  background: transparent;
+  flex: 0 0 auto;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.radioGroup input[type='radio']:checked {
+  border-color: var(--cream);
+  background-color: var(--cream);
+}
+
+.radioGroup input[type='radio']:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(250, 248, 245, 0.35);
 }
 
 .btnText {
   width: auto;
   padding: 0.5rem 0;
   margin: 0.5rem 0 1rem;
-  font-family: 'Jost', sans-serif;
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--sage);
@@ -82,8 +119,53 @@
 }
 
 .btnText:hover {
-  color: var(--charcoal);
-  text-decoration: underline;
+  color: var(--cream);
+}
+
+.guestRow {
+  margin-bottom: 0.85rem;
+}
+
+.guestRowMain {
+  display: flex;
+  align-items: center;    
+  gap: 0.75rem;
+}
+
+.guestField {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.guestEmailInput {
+  width: 100%;
+}
+
+.removeGuestButton {
+  width: auto;
+  flex: 0 0 auto;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--sage);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.removeGuestButton:hover {
+  color: var(--cream);
+}
+
+@media (max-width: 500px) {
+  .guestRowMain {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .guestField {
+    width: 100%;
+  }
 }
 
 .submitButton {

@@ -1,5 +1,6 @@
 import styles from './WelcomeSection.module.css'
 import kissImage from '../assets/images/kiss.jpeg'
+import holdImage from '../assets/images/hold.jpeg'
 
 export function WelcomeSection() {
   return (
@@ -16,7 +17,6 @@ export function WelcomeSection() {
             <span className={styles.impact}>Fotografiska, Tallinn</span>. The party starts at{' '}
             <span className={styles.impact}>17:00</span>.
           </p>
-          <p>Please let us know if you will or won&apos;t be joining us by XX.XX.XXXX using the form below.</p>
           <p>Can&apos;t wait to celebrate with you,</p>
           <p className={styles.names}>Triinu &amp; Konrad</p>
         </div>
@@ -38,7 +38,7 @@ export function WelcomeSection() {
           </p>
         </div>
         <div className={styles.imagePane}>
-          <img className={styles.photo} src={kissImage} alt="Triinu and Konrad standing together in nature" />
+          <img className={styles.photo} src={holdImage} alt="Triinu and Konrad standing together in nature" />
         </div>
       </div>
     </section>
